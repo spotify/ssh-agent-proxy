@@ -16,99 +16,32 @@
 
 package com.spotify.sshagentproxy;
 
-import com.google.common.base.Objects;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Iterator;
 
 /**
  * Represents a key held by ssh-agent.
  */
-public class Identity {
+public interface Identity {
 
-  private static final String RSA_LABEL = "ssh-rsa";
-  private static final String DSS_LABEL = "ssh-dss";
+  /**
+   * @return The key format as a string, e.g. "ssh-rsa", "ssh-dss", etc.
+   */
+  String getKeyFormat();
 
-  private final String keyFormat;
-  private final PublicKey publicKey;
-  private final String comment;
+  /**
+   * @return The {@link PublicKey}
+   */
+  PublicKey getPublicKey();
 
-  private Identity(final String keyFormat, final PublicKey publicKey, final String comment) {
-    this.keyFormat = keyFormat;
-    this.publicKey = publicKey;
-    this.comment = comment;
-  }
+  /**
+   * @return The key comment as a string.
+   */
+  String getComment();
 
-  static Identity from(final byte[] keyBlob, final String comment)
-      throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
-    final Iterator<byte[]> keyBlobIterator = new ByteIterator(keyBlob);
-    final String keyFormat = new String(keyBlobIterator.next());
+  /**
+   * @return An array of bytes encoded as per RFC 4253 section 6.6 "Public Key Algorithms"
+   * for either of the supported key types: "ssh-dss" or "ssh-rsa".
+   */
+  byte[] getKeyBlob();
 
-    final PublicKey publicKey;
-    switch (keyFormat) {
-      case RSA_LABEL:
-        publicKey = RSA.from(keyBlob);
-        break;
-      case DSS_LABEL:
-      default:
-        throw new UnsupportedOperationException(String.format(
-            "Got unsupported key format '%s'. Skipping.", keyFormat));
-    }
-
-    keyBlobIterator.next();
-    return new Identity(keyFormat, publicKey, comment);
-  }
-
-  public String getKeyFormat() {
-    return keyFormat;
-  }
-
-  public PublicKey getPublicKey() {
-    return publicKey;
-  }
-
-  public String getComment() {
-    return comment;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Identity identity = (Identity) o;
-
-    if (keyFormat != null ? !keyFormat.equals(identity.keyFormat) : identity.keyFormat != null) {
-      return false;
-    }
-    if (publicKey != null ? !publicKey.equals(identity.publicKey) : identity.publicKey != null) {
-      return false;
-    }
-    return !(comment != null ? !comment.equals(identity.comment) : identity.comment != null);
-
-  }
-
-  @Override
-  public int hashCode() {
-    int result = keyFormat != null ? keyFormat.hashCode() : 0;
-    result = 31 * result + (publicKey != null ? publicKey.hashCode() : 0);
-    result = 31 * result + (comment != null ? comment.hashCode() : 0);
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return Objects.toStringHelper(this)
-        .add("keyFormat", keyFormat)
-        .add("publicKey", publicKey)
-        .add("comment", comment)
-        .toString();
-  }
 }

@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 /**
  * A set of utilities to parse private and public RSA PEM keys as produced by ssh-keygen.
  */
-public class TraditionalKeyParser {
+class TraditionalKeyParser {
 
   private static final Pattern PUBLIC_KEY_PATTERN = Pattern.compile("^ssh-rsa (.+) .*$");
   private static final Pattern PRIVATE_KEY_PATTERN =

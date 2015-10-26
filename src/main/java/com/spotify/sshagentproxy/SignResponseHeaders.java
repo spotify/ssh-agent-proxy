@@ -21,7 +21,7 @@ import com.google.common.base.Objects;
 /**
  * A class that represents SSH2_AGENT_SIGN_RESPONSE headers from the ssh-agent.
  */
-class SignResponse extends AgentReply {
+class SignResponseHeaders extends AgentReplyHeaders {
 
   // ssh-agent communication protocol constants
   static final int SSH2_AGENT_SIGN_RESPONSE = 14;
@@ -30,17 +30,17 @@ class SignResponse extends AgentReply {
   private final int responseCode;
   private final int responseLength;
 
-  private SignResponse(final int length,
-                       final int responseCode,
-                       final int responseLength) {
+  private SignResponseHeaders(final int length,
+                              final int responseCode,
+                              final int responseLength) {
     this.length = length;
     this.responseCode = responseCode;
     this.responseLength = responseLength;
   }
 
-  static SignResponse from(final byte[] bytes) {
+  static SignResponseHeaders from(final byte[] bytes) {
     if (bytes.length != 9) {
-      throw new IllegalArgumentException("SSH2_AGENT_SIGN_RESPONSE eaders need to be 9 bytes");
+      throw new IllegalArgumentException("SSH2_AGENT_SIGN_RESPONSE headers need to be 9 bytes");
     }
 
     // First four bytes represents length in bytes of rest of message
@@ -55,7 +55,7 @@ class SignResponse extends AgentReply {
     // Next four bytes is the response length
     final int responseLength = third(bytes);
 
-    return new SignResponse(length, responseCode, responseLength);
+    return new SignResponseHeaders(length, responseCode, responseLength);
   }
 
   int getLength() {
@@ -73,6 +73,9 @@ class SignResponse extends AgentReply {
   @Override
   public String toString() {
     return Objects.toStringHelper(this)
+        .add("length", length)
+        .add("responseCode", responseCode)
+        .add("responseLength", responseLength)
         .toString();
   }
 
@@ -85,7 +88,7 @@ class SignResponse extends AgentReply {
       return false;
     }
 
-    SignResponse that = (SignResponse) o;
+    SignResponseHeaders that = (SignResponseHeaders) o;
 
     if (length != that.length) {
       return false;

@@ -26,7 +26,7 @@ import java.security.spec.RSAPublicKeySpec;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class AgentOutputTest {
+public class AgentOutputTest extends TestConstants {
 
   private final OutputStream out = mock(OutputStream.class);
 
@@ -39,36 +39,30 @@ public class AgentOutputTest {
 
   @Test
   public void testSignRequest() throws Exception {
-    final String publicKeyStr =
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIPsEQebkSPDdUAkxY3QNlGasXWhYf8m57tRjnVsU5BqKpRVEu" +
-        "6rfK8OIWu3l57Kc7oGicRX0RmQHmNr0We11WmQrYxqd4NEQQaKGSTaYyY7vyNC42gCjWCYape8+0ZL/l7px7/to8" +
-        "n/l8ljIIdrDblQ7mxSo1omDAliZnXuuh7xWx6Wt1v3SsJ0EgFMwWCOw7xUH86UMM5D9OYIZFiRD/1hQjrezLH34T" +
-        "d8L48cDKh8XF3BmpdlMNxUmWBYckmPm88xG1btCKpghtcqTkrzVbZSz1uIsSeXJzxGRKUkkkvyQaQYBhMoZTYxSb" +
-        "QCMTiWsnALe4iyhfUDP2TjAr1qSv david@example.com";
-
     final AgentOutput agentOut = new AgentOutput(out);
-    final RSAPublicKeySpec publicKeySpec = TraditionalKeyParser.parsePemPublicKey(publicKeyStr);
+    final RSAPublicKeySpec publicKeySpec = TraditionalKeyParser.parsePemPublicKey(PUBLIC_KEY2);
     final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
     final RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(publicKeySpec);
     final byte[] bytes = new byte[]{1, 2, 3, 4};
 
     agentOut.signRequest(publicKey, bytes);
     verify(out).write(new byte[] {
-        0, 0, 1, 40, 13, 0, 0, 1, 23, 0, 0, 0, 7, 115, 115, 104, 45, 114, 115, 97, 0, 0, 0, 3, 1,
-        0, 1, 0, 0, 1, 1, 0, -56, 62, -63, 16, 121, -71, 18, 60, 55, 84, 2, 76, 88, -35, 3, 101,
-        25, -85, 23, 90, 22, 31, -14, 110, 123, -75, 24, -25, 86, -59, 57, 6, -94, -87, 69, 81,
-        46, -22, -73, -54, -16, -30, 22, -69, 121, 121, -20, -89, 59, -96, 104, -100, 69, 125, 17,
-        -103, 1, -26, 54, -67, 22, 123, 93, 86, -103, 10, -40, -58, -89, 120, 52, 68, 16, 104,
-        -95, -110, 77, -90, 50, 99, -69, -14, 52, 46, 54, -128, 40, -42, 9, -122, -87, 123, -49,
-        -76, 100, -65, -27, -18, -100, 123, -2, -38, 60, -97, -7, 124, -106, 50, 8, 118, -80, -37,
-        -107, 14, -26, -59, 42, 53, -94, 96, -64, -106, 38, 103, 94, -21, -95, -17, 21, -79, -23,
-        107, 117, -65, 116, -84, 39, 65, 32, 20, -52, 22, 8, -20, 59, -59, 65, -4, -23, 67, 12,
-        -28, 63, 78, 96, -122, 69, -119, 16, -1, -42, 20, 35, -83, -20, -53, 31, 126, 19, 119,
-        -62, -8, -15, -64, -54, -121, -59, -59, -36, 25, -87, 118, 83, 13, -59, 73, -106, 5, -121,
-        36, -104, -7, -68, -13, 17, -75, 110, -48, -118, -90, 8, 109, 114, -92, -28, -81, 53, 91,
-        101, 44, -11, -72, -117, 18, 121, 114, 115, -60, 100, 74, 82, 73, 36, -65, 36, 26, 65,
-        -128, 97, 50, -122, 83, 99, 20, -101, 64, 35, 19, -119, 107, 39, 0, -73, -72, -117, 40,
-        95, 80, 51, -10, 78, 48, 43, -42, -92, -81, 0, 0, 0, 4, 1, 2, 3, 4, 0, 0, 0, 0,
+        0, 0, 1, 40, 13, 0, 0, 1, 23, 0, 0, 0, 7, 115, 115, 104, 45, 114, 115, 97, 0, 0, 0, 3,
+        1, 0, 1, 0, 0, 1, 1, 0, -101, -45, 102, -66, 72, -24, 64, 113, 40, -125, -113, 31, 65,
+        31, 75, 113, -64, 67, 71, -70, 62, 108, 93, -77, 60, -49, 89, -109, -24, 106, 36,
+        -116, -25, -42, 116, 90, -45, 31, 60, 0, 20, -74, -18, 8, 114, -66, 65, 3, 28, -102,
+        22, -17, 31, -41, 91, -71, 109, -63, 93, -106, 24, -59, 19, -125, -100, 95, -79, 20,
+        3, 63, -95, -104, 13, -72, -106, -8, 40, 35, 21, -102, 55, -86, -32, 112, -106, 98,
+        -6, -36, -109, -12, -76, 110, 33, 66, -53, 76, -37, -38, 112, -44, -29, -123, 74, 91,
+        84, -63, 11, 76, 107, 121, -40, 38, -25, -3, 99, -58, -119, -78, -3, 37, -50, 95, 37,
+        21, -85, 31, 38, -10, 29, -17, -89, 86, 111, -123, -29, 103, -16, -119, 118, 43, -62,
+        -9, 85, -42, -59, -74, -71, -19, -51, 38, -112, -91, -11, 11, -56, -12, -118, -53,
+        37, 112, 101, 24, 92, 101, 5, 21, -57, 86, 81, -54, -124, -74, 49, 99, 101, 44, 29,
+        101, 38, -126, 118, -87, -4, 80, -94, -9, -87, 94, -120, 111, -25, 103, -125, -17,
+        -45, -118, -39, -55, -14, 7, 40, 49, 75, 113, 103, 93, -78, 107, -8, -84, -20, 75,
+        1, -101, -59, 108, -57, -93, 110, -28, -82, 93, 119, 88, -50, 77, 91, 9, 109, 48, -119,
+        3, -99, -113, 65, 3, -74, -122, 109, -88, 105, -51, 50, 90, 99, -18, 98, 14, 28, 94,
+        41, 119, 68, -51, -116, 17, 0, 0, 0, 4, 1, 2, 3, 4, 0, 0, 0, 0,
     });
   }
 

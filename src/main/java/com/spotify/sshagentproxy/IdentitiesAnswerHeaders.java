@@ -21,7 +21,7 @@ import com.google.common.base.Objects;
 /**
  * A class that represents SSH2_AGENT_IDENTITIES_ANSWER headers from the ssh-agent.
  */
-class IdentitiesAnswer extends AgentReply {
+class IdentitiesAnswerHeaders extends AgentReplyHeaders {
 
   // ssh-agent communication protocol constants
   static final int SSH2_AGENT_IDENTITIES_ANSWER = 12;
@@ -30,13 +30,13 @@ class IdentitiesAnswer extends AgentReply {
   private final int responseCode;
   private final int count;
 
-  private IdentitiesAnswer(final int length, final int responseCode, final int count) {
+  private IdentitiesAnswerHeaders(final int length, final int responseCode, final int count) {
     this.length = length;
     this.responseCode = responseCode;
     this.count = count;
   }
 
-  static IdentitiesAnswer from(final byte[] bytes) {
+  static IdentitiesAnswerHeaders from(final byte[] bytes) {
     if (bytes.length != 9) {
       throw new IllegalArgumentException("SSH2_AGENT_IDENTITIES_ANSWER headers need to be 9 bytes");
     }
@@ -53,7 +53,7 @@ class IdentitiesAnswer extends AgentReply {
     // Next four bytes is the number of keys the agent has
     final int count = third(bytes);
 
-    return new IdentitiesAnswer(length, responseCode, count);
+    return new IdentitiesAnswerHeaders(length, responseCode, count);
   }
 
   int getLength() {
@@ -86,7 +86,7 @@ class IdentitiesAnswer extends AgentReply {
       return false;
     }
 
-    IdentitiesAnswer that = (IdentitiesAnswer) o;
+    IdentitiesAnswerHeaders that = (IdentitiesAnswerHeaders) o;
 
     if (length != that.length) {
       return false;

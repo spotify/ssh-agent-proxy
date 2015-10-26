@@ -24,7 +24,7 @@ import java.util.Arrays;
  * There are always three headers consisting of the first four bytes, fifth byte, and next four
  * bytes. What these bytes mean depends on the message type.
  */
-abstract class AgentReply {
+abstract class AgentReplyHeaders {
 
   /**
    * Get first four bytes as an int

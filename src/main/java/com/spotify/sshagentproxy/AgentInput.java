@@ -18,6 +18,7 @@ package com.spotify.sshagentproxy;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,11 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.interfaces.RSAPublicKey;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Iterator;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -46,66 +50,62 @@ class AgentInput implements Closeable {
   }
 
   /**
-   * Read the first 9 bytes from the {@link InputStream} which make up the SSH2_AGENT_SIGN_RESPONSE
-   * headers. Return an {@link SignResponse} object that represents the message.
-   * @return {@link SignResponse}
-   */
-   SignResponse readSignResponse() throws IOException {
-     final byte[] bytes = readBytes(9, "SSH2_AGENT_SIGN_RESPONSE");
-     log.debug("Received SSH2_AGENT_SIGN_RESPONSE message from ssh-agent.");
-     return SignResponse.from(bytes);
-   }
-
-  /**
-   * Read the rest of the SSH2_AGENT_SIGN_RESPONSE message from ssh-agent given a
-   * {@link SignResponse}.
-   * @param signResponse {@link SignResponse}
-   * @return byte[]
+   * Return a list of {@link Identity} from the bytes in the ssh-agent's {@link InputStream}.
+   * @return A list of {@link Identity}
    * @throws IOException
    */
-  Iterator<byte[]> readSignResponseData(final SignResponse signResponse) throws IOException {
-    // 5 is the sum of the number of bytes of response code and response length
-    final byte[] bytes = readBytes(signResponse.getLength() - 5);
-    return new ByteIterator(bytes);
-  }
-
-  /**
-   * Read the first 9 bytes from the {@link InputStream} which make up the
-   * SSH2_AGENT_IDENTITIES_ANSWER headers. Return an {@link IdentitiesAnswer} object that
-   * represents the message.
-   * @return {@link IdentitiesAnswer}
-   */
-  IdentitiesAnswer readIdentitiesAnswer() throws IOException {
-    final byte[] bytes = readBytes(9, "SSH2_AGENT_IDENTITIES_ANSWER");
+  List<Identity> readIdentitiesAnswer() throws IOException {
+    // Read the first 9 bytes from the InputStream which are the
+    // SSH2_AGENT_IDENTITIES_ANSWER headers. Return an IdentitiesAnswerHeaders object that
+    // represents the message.
+    final byte[] headerBytes = readBytes(9, "SSH2_AGENT_IDENTITIES_ANSWER");
     log.debug("Received SSH2_AGENT_IDENTITIES_ANSWER message from ssh-agent.");
-    return IdentitiesAnswer.from(bytes);
+    final IdentitiesAnswerHeaders headers = IdentitiesAnswerHeaders.from(headerBytes);
+
+    // 5 is the sum of the number of bytes of response code and count
+    final byte[] bytes = readBytes(headers.getLength() - 5);
+    final Iterator<byte[]> byteIterator = new ByteIterator(bytes);
+
+    final List<Identity> identities = Lists.newArrayList();
+    while (byteIterator.hasNext()) {
+      final byte[] keyBlob = byteIterator.next();
+      final byte[] keyComment = byteIterator.next();
+      try {
+        identities.add(DefaultIdentity.from(keyBlob, new String(keyComment)));
+      } catch (InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException ignored) {
+        log.warn("Unable to parse SSH identity. Skipping.");
+        byteIterator.next();
+      }
+    }
+
+    return identities;
   }
 
   /**
-   * Returns an {@link Iterator} of {@link RSAPublicKey} given an {@link IdentitiesAnswer}.
-   * @param answer {@link IdentitiesAnswer}
-   * @return Iterator&lt;RSAPublicKey&gt;
+   * Return an array of bytes from the ssh-agent representing data signed by a private SSH key.
+   * @return An array of signed bytes.
    * @throws IOException
    */
-  Iterator<RSAPublicKey> readIdentitiesAnswerData(final IdentitiesAnswer answer)
-      throws IOException {
-    // 5 is the sum of the number of bytes of response code and count
-    final byte[] bytes = readBytes(answer.getLength() - 5);
-    return new RSAPublicKeyIterator(bytes);
-  }
+   byte[] readSignResponse() throws IOException {
+     // Read the first 9 bytes from the InputStream which are the SSH2_AGENT_SIGN_RESPONSE headers.
+     final byte[] headerBytes = readBytes(9, "SSH2_AGENT_SIGN_RESPONSE");
+     log.debug("Received SSH2_AGENT_SIGN_RESPONSE message from ssh-agent.");
+     final SignResponseHeaders headers = SignResponseHeaders.from(headerBytes);
 
-  /**
-   * Returns an {@link Iterator} of {@link Identity} given an {@link IdentitiesAnswer}.
-   * @param answer {@link IdentitiesAnswer}
-   * @return Iterator&lt;Identitygt;
-   * @throws IOException
-   */
-  Iterator<Identity> readIdentitiesAnswerData2(final IdentitiesAnswer answer)
-      throws IOException {
-    // 5 is the sum of the number of bytes of response code and count
-    final byte[] bytes = readBytes(answer.getLength() - 5);
-    return new IdentityIterator(bytes);
-  }
+     // Read the rest of the SSH2_AGENT_SIGN_RESPONSE message from ssh-agent.
+     // 5 is the sum of the number of bytes of response code and response length
+     final byte[] bytes = readBytes(headers.getLength() - 5);
+     final ByteIterator iterator = new ByteIterator(bytes);
+     final byte[] responseType = iterator.next();
+
+     final String signatureFormatId = new String(responseType);
+     if (!signatureFormatId.equals(RSA.RSA_LABEL)) {
+       throw new RuntimeException("I unexpectedly got a non-RSA signature format ID in the "
+                                  + "SSH2_AGENT_SIGN_RESPONSE's signature blob.");
+     }
+
+     return iterator.next();
+   }
 
   /**
    * Read n bytes from the {@link InputStream}.

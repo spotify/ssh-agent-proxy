@@ -21,6 +21,7 @@ import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
@@ -32,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A class that represents the ssh-agent output.
  */
-class AgentOutput implements AutoCloseable {
+class AgentOutput implements Closeable {
 
   private static final Logger log = LoggerFactory.getLogger(AgentOutput.class);
 
@@ -152,7 +153,7 @@ class AgentOutput implements AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() throws IOException {
     out.close();
   }
 

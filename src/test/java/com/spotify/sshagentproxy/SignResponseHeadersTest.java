@@ -18,26 +18,25 @@ package com.spotify.sshagentproxy;
 
 import org.junit.Test;
 
-import static com.spotify.sshagentproxy.IdentitiesAnswer.SSH2_AGENT_IDENTITIES_ANSWER;
+import static com.spotify.sshagentproxy.SignResponseHeaders.SSH2_AGENT_SIGN_RESPONSE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class IdentitiesAnswerTest {
+public class SignResponseHeadersTest {
 
   @Test
   public void test() throws Exception {
     final byte[] bytes = new byte[]{
-        0, 1, 0, 123, SSH2_AGENT_IDENTITIES_ANSWER, 0, 0, 121, 1
+        0, 1, 0, 123, SSH2_AGENT_SIGN_RESPONSE, 0, 0, 121, 1
     };
-
-    final IdentitiesAnswer a = IdentitiesAnswer.from(bytes);
+    final SignResponseHeaders a = SignResponseHeaders.from(bytes);
     assertThat(a.getLength(), equalTo((int) Math.pow(16, 4) + 123));
-    assertThat(a.getResponseCode(), equalTo(SSH2_AGENT_IDENTITIES_ANSWER));
-    assertThat(a.getCount(), equalTo((int) Math.pow(16, 2) * 121 + 1));
+    assertThat(a.getResponseCode(), equalTo(SSH2_AGENT_SIGN_RESPONSE));
+    assertThat(a.getResponseLength(), equalTo((int) Math.pow(16, 2) * 121 + 1));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAssertion() throws Exception {
-    IdentitiesAnswer.from(new byte[]{0, 0, 1});
+    SignResponseHeaders.from(new byte[] {0, 0, 1});
   }
 }

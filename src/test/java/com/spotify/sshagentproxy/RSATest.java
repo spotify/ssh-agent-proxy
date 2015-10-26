@@ -27,18 +27,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RSATest {
+public class RSATest extends TestConstants {
 
   @Test
   public void testFrom() throws Exception {
-    final String publicKey =
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0t9dAbzUOsA12TWJVsrQkG9l/i3x21tvjqEvB1UTVpajH5maArak8"
-        + "Sz7vlkAjgeXVnJPCnPRnA+dbntffbi9jqfmwwgp61PA3CBSY0+j5FekJap9VuwhceizPX+ctZEuQhXcJRlWgvZ2eyq"
-        + "BLVMaaZCFUW7e2zwLQRzCSt3uIn9WUQjTf/neWShnmADWkmMShCeTa4CjVMPFzm14Fu1NHeQEkkAfR//MNBNOqFdHh"
-        + "QP5zIk+W/+cYawCXzmTp/nJQN83reZufSpRSjPHZG9Wj3hUZ1disOVjSTEqIW/CkI3L1/6auA94itTU/lNmssoKL1Z"
-        + "YdAYs/HV2bUV5oqfZz dxia@spotify.com";
-
-    final RSAPublicKey key = RSA.from(publicKey.getBytes());
+    final RSAPublicKey key = RSA.from(PUBLIC_KEY2.getBytes());
     assertThat(key.getAlgorithm(), equalTo("RSA"));
     assertThat(key.getPublicExponent(), equalTo(BigInteger.valueOf(65537)));
   }
