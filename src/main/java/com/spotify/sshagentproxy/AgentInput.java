@@ -95,6 +95,19 @@ class AgentInput implements Closeable {
   }
 
   /**
+   * Returns an {@link Iterator} of {@link Identity} given an {@link IdentitiesAnswer}.
+   * @param answer {@link IdentitiesAnswer}
+   * @return Iterator&lt;Identitygt;
+   * @throws IOException
+   */
+  Iterator<Identity> readIdentitiesAnswerData2(final IdentitiesAnswer answer)
+      throws IOException {
+    // 5 is the sum of the number of bytes of response code and count
+    final byte[] bytes = readBytes(answer.getLength() - 5);
+    return new IdentityIterator(bytes);
+  }
+
+  /**
    * Read n bytes from the {@link InputStream}.
    * @param n bytes to read
    * @return byte[]
