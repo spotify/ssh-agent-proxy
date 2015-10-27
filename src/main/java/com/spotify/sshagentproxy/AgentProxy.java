@@ -16,10 +16,11 @@
 
 package com.spotify.sshagentproxy;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
-public interface AgentProxy {
+public interface AgentProxy extends Closeable {
 
   /**
    * Get a list of public keys from the ssh-agent.

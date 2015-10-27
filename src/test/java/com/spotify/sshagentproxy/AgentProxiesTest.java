@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DefaultAgentProxyTest extends TestConstants {
+public class AgentProxiesTest extends TestConstants {
 
   private final AgentOutput out = mock(AgentOutput.class);
   private final AgentInput in = mock(AgentInput.class);
@@ -43,7 +43,7 @@ public class DefaultAgentProxyTest extends TestConstants {
     when(in.readIdentitiesAnswer()).thenReturn(expectedIds);
 
     final List<Identity> identities = Lists.newArrayList();
-    try (final DefaultAgentProxy proxy = new DefaultAgentProxy(in, out)) {
+    try (final AgentProxy proxy = AgentProxies.withCustomInputOutput(in, out)) {
       identities.addAll(proxy.list());
     }
 
@@ -56,7 +56,7 @@ public class DefaultAgentProxyTest extends TestConstants {
     when(in.readSignResponse()).thenReturn(SIGN_RESPONSE_DATA);
 
     final byte[] signed;
-    try (final DefaultAgentProxy proxy = new DefaultAgentProxy(in, out)) {
+    try (final AgentProxy proxy = AgentProxies.withCustomInputOutput(in, out)) {
       signed = proxy.sign(identity, DATA);
     }
 
