@@ -16,6 +16,7 @@
 
 package com.spotify.sshagentproxy;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AgentProxy {
@@ -24,13 +25,13 @@ public interface AgentProxy {
    * Get a list of public keys from the ssh-agent.
    * @return A list of {@link Identity}
    */
-  List<Identity> list();
+  List<Identity> list() throws IOException;
 
   /**
    * Ask the ssh-agent to sign some data in the form of an array of bytes.
-   * @param identity    An arrary of bytes for data to be signed.
-   * @param data        An arrary of bytes for data to be signed.
+   * @param identity    An array of bytes for data to be signed.
+   * @param data        An array of bytes for data to be signed.
    * @return            An array of bytes of signed data.
    */
-  byte[] sign(final Identity identity, final byte[] data);
+  byte[] sign(final Identity identity, final byte[] data) throws IOException;
 }

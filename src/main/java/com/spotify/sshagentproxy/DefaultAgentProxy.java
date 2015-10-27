@@ -47,8 +47,7 @@ public class DefaultAgentProxy implements AgentProxy, Closeable {
   private final AgentInput in;
   private final AgentOutput out;
 
-  @SuppressWarnings("unused")
-  public DefaultAgentProxy() {
+  public static DefaultAgentProxy fromEnvironmentVariable() {
     final String socketPath = System.getenv("SSH_AUTH_SOCK");
     if (isNullOrEmpty(socketPath)) {
       throw new RuntimeException(
@@ -61,8 +60,8 @@ public class DefaultAgentProxy implements AgentProxy, Closeable {
 
       log.debug("connected to " + channel.getRemoteSocketAddress());
 
-      in = new AgentInput(Channels.newInputStream(channel));
-      out = new AgentOutput(Channels.newOutputStream(channel));
+      return new DefaultAgentProxy(new AgentInput(Channels.newInputStream(channel)),
+                                   new AgentOutput(Channels.newOutputStream(channel)));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -75,17 +74,13 @@ public class DefaultAgentProxy implements AgentProxy, Closeable {
   }
 
   @Override
-  public List<Identity> list() {
-    try {
-      out.requestIdentities();
-      return in.readIdentitiesAnswer();
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    }
+  public List<Identity> list() throws IOException {
+    out.requestIdentities();
+    return in.readIdentitiesAnswer();
   }
 
   @Override
-  public byte[] sign(final Identity identity, final byte[] data) {
+  public byte[] sign(final Identity identity, final byte[] data) throws IOException {
     // TODO (dxia) Support other SSH keys
     final String keyFormat = identity.getKeyFormat();
     if (!keyFormat.equals(RSA.RSA_LABEL)) {
@@ -93,12 +88,8 @@ public class DefaultAgentProxy implements AgentProxy, Closeable {
           "Unknown key type %s. This code currently only supports %s.", keyFormat, RSA.RSA_LABEL)));
     }
 
-    try {
-      out.signRequest((RSAPublicKey) identity.getPublicKey(), data);
-      return in.readSignResponse();
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    }
+    out.signRequest((RSAPublicKey) identity.getPublicKey(), data);
+    return in.readSignResponse();
   }
 
   @Override
