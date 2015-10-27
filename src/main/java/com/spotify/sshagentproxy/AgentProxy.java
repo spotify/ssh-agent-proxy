@@ -29,7 +29,14 @@ public interface AgentProxy extends Closeable {
   List<Identity> list() throws IOException;
 
   /**
-   * Ask the ssh-agent to sign some data in the form of an array of bytes.
+   * Ask the ssh-agent to hash and sign some data in the form of an array of bytes.
+   *
+   * According to the ssh-agent specs:
+   * "Upon receiving this request, the agent will look up the private key that
+   * corresponds to the public key contained in key_blob. It will use this
+   * private key to sign the "data" and produce a signature blob using the
+   * key type-specific method described in RFC 4253 section 6.6 "Public Key
+   * Algorithms".
    * @param identity    An array of bytes for data to be signed.
    * @param data        An array of bytes for data to be signed.
    * @return            An array of bytes of signed data.
