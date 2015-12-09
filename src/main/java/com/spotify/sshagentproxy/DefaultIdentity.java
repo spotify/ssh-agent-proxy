@@ -24,7 +24,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Iterator;
 
-class DefaultIdentity implements Identity {
+public class DefaultIdentity implements Identity {
 
   private static final String RSA_LABEL = "ssh-rsa";
   private static final String DSS_LABEL = "ssh-dss";
@@ -42,7 +42,7 @@ class DefaultIdentity implements Identity {
     this.keyBlob = keyBlob;
   }
 
-  static Identity from(final byte[] keyBlob, final String comment)
+  public static Identity from(final byte[] keyBlob, final String comment)
       throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
     final Iterator<byte[]> keyBlobIterator = new ByteIterator(keyBlob);
     final String keyFormat = new String(keyBlobIterator.next());
