@@ -18,7 +18,9 @@ package com.spotify.sshagentproxy;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertFalse;
@@ -35,4 +37,18 @@ public class ByteIteratorTest {
     assertFalse(iterator.hasNext());
   }
 
+  @Test
+  public void testTurnByteIntoUnsignedInt() {
+    // Test that signed bytes using 2's complement are turned into unsigned ints
+    byte[] bytes = new byte[437];
+    new Random().nextBytes(bytes);
+    bytes[0] = 0;
+    bytes[1] = 0;
+    bytes[2] = 1;
+    bytes[3] = -79;
+
+    final Iterator<byte[]> iterator = new ByteIterator(bytes);
+    assertThat(iterator.next(), equalTo(Arrays.copyOfRange(bytes, 4, bytes.length)));
+    assertFalse(iterator.hasNext());
+  }
 }
