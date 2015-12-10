@@ -72,9 +72,9 @@ class AgentInput implements Closeable {
       final byte[] keyComment = byteIterator.next();
       try {
         identities.add(DefaultIdentity.from(keyBlob, new String(keyComment)));
-      } catch (InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException ignored) {
-        log.warn("Unable to parse SSH identity. Skipping.");
-        byteIterator.next();
+      } catch (InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException |
+          UnsupportedOperationException e) {
+        log.warn("Unable to parse SSH identity. Skipping. {}", e);
       }
     }
 
