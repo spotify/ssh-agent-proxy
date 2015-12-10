@@ -58,7 +58,7 @@ class ByteIterator implements Iterator<byte[]> {
   private int s2i(final byte[] bytes) {
     int num = 0;
     for (int i = 0; i < 4; i++) {
-      num += (int) bytes[i] << ((3 - i) * 8);
+      num += (bytes[i] & 0xff) << ((3 - i) * 8);
     }
     return num;
   }
