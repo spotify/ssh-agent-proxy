@@ -4,7 +4,7 @@
 
   <groupId>com.spotify</groupId>
   <artifactId>ssh-agent-proxy</artifactId>
-  <version>0.1.4-SNAPSHOT</version>
+  <version>0.1.4</version>
   <packaging>jar</packaging>
   <name>ssh-agent-proxy</name>
   <description>A Java library that talks to the local ssh-agent.</description>
@@ -22,7 +22,7 @@
     <connection>scm:git:https://github.com/spotify/ssh-agent-proxy.git</connection>
     <developerConnection>scm:git:git@github.com:spotify/ssh-agent-proxy.git</developerConnection>
     <url>https://github.com/spotify/ssh-agent-proxy</url>
-    <tag>HEAD</tag>
+    <tag>0.1.4</tag>
   </scm>
 
   <properties>
