@@ -38,7 +38,8 @@ class IdentitiesAnswerHeaders extends AgentReplyHeaders {
 
   static IdentitiesAnswerHeaders from(final byte[] bytes) {
     if (bytes.length != 9) {
-      throw new IllegalArgumentException("SSH2_AGENT_IDENTITIES_ANSWER headers need to be 9 bytes");
+      throw new IllegalArgumentException("SSH2_AGENT_IDENTITIES_ANSWER headers need to be 9 bytes"
+                                         + " (received " + bytes.length + ")");
     }
 
     // First four bytes represents length in bytes of rest of message
@@ -47,7 +48,9 @@ class IdentitiesAnswerHeaders extends AgentReplyHeaders {
     // Next byte is the response code
     final int responseCode = second(bytes);
     if (responseCode != SSH2_AGENT_IDENTITIES_ANSWER) {
-      throw new RuntimeException("Got the wrong response code for SSH2_AGENT_IDENTITIES_ANSWER.");
+      throw new RuntimeException("Got the wrong response code for SSH2_AGENT_IDENTITIES_ANSWER"
+                                 + " (expected: " + SSH2_AGENT_IDENTITIES_ANSWER
+                                 + ", received: " + responseCode + ".");
     }
 
     // Next four bytes is the number of keys the agent has
