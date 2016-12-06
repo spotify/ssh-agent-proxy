@@ -70,7 +70,7 @@ class IdentitiesAnswerHeaders extends AgentReplyHeaders {
     if (responseCode != SSH2_AGENT_IDENTITIES_ANSWER) {
       throw new RuntimeException("Got the wrong response code for SSH2_AGENT_IDENTITIES_ANSWER"
                                  + " (expected: " + SSH2_AGENT_IDENTITIES_ANSWER
-                                 + ", received: " + responseCode + ".");
+                                 + ", received: " + responseCode + ").");
     }
 
     // Next four bytes is the number of keys the agent has
