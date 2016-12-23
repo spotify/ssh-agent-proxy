@@ -8,7 +8,6 @@
     <version>5</version>
   </parent>
 
-  <groupId>com.spotify</groupId>
   <artifactId>ssh-agent-proxy</artifactId>
   <version>0.1.6-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -40,9 +39,9 @@
 
   <developers>
     <developer>
-      <id>davidxia</id>
+      <id>dxia</id>
       <name>David Xia</name>
-      <email>david@davidxia.com</email>
+      <email>dxia@spotify.com</email>
     </developer>
   </developers>
 
@@ -86,17 +85,13 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
