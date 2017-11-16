@@ -47,7 +47,7 @@ import java.util.Arrays;
 abstract class AgentReplyHeaders {
 
   /**
-   * Get first four bytes as an int
+   * Get first four bytes as an int.
    * @param bytes Bytes to parse
    * @return int
    */
@@ -56,7 +56,7 @@ abstract class AgentReplyHeaders {
   }
 
   /**
-   * Get fifth byte as an int
+   * Get fifth byte as an int.
    * @param bytes Bytes to parse
    * @return int
    */
@@ -65,7 +65,7 @@ abstract class AgentReplyHeaders {
   }
 
   /**
-   * Get sixth through ninth byte as an int
+   * Get sixth through ninth byte as an int.
    * @param bytes Bytes to parse
    * @return int
    */

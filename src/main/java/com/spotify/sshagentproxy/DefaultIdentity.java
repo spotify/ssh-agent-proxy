@@ -37,7 +37,6 @@
 package com.spotify.sshagentproxy;
 
 import com.google.common.base.Objects;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -70,7 +69,7 @@ public class DefaultIdentity implements Identity {
     final PublicKey publicKey;
     switch (keyFormat) {
       case RSA_LABEL:
-        publicKey = RSA.from(keyBlob);
+        publicKey = Rsa.from(keyBlob);
         break;
       case DSS_LABEL:
       default:
@@ -110,15 +109,15 @@ public class DefaultIdentity implements Identity {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(final Object obj) {
+    if (this == obj) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
 
-    DefaultIdentity that = (DefaultIdentity) o;
+    final DefaultIdentity that = (DefaultIdentity) obj;
 
     if (keyFormat != null ? !keyFormat.equals(that.keyFormat) : that.keyFormat != null) {
       return false;

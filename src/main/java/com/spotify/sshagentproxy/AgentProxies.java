@@ -36,23 +36,20 @@
 
 package com.spotify.sshagentproxy;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
-
 import jnr.unixsocket.UnixSocketAddress;
 import jnr.unixsocket.UnixSocketChannel;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains a static factory method that creates a default implementation of
@@ -111,10 +108,10 @@ public class AgentProxies {
     public byte[] sign(final Identity identity, final byte[] data) throws IOException {
       // TODO (dxia) Support other SSH keys
       final String keyFormat = identity.getKeyFormat();
-      if (!keyFormat.equals(RSA.RSA_LABEL)) {
+      if (!keyFormat.equals(Rsa.RSA_LABEL)) {
         throw Throwables.propagate(new RuntimeException(String.format(
             "Unknown key type %s. This code currently only supports %s.",
-            keyFormat, RSA.RSA_LABEL)));
+            keyFormat, Rsa.RSA_LABEL)));
       }
 
       out.signRequest((RSAPublicKey) identity.getPublicKey(), data);

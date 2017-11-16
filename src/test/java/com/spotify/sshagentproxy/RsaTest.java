@@ -36,22 +36,21 @@
 
 package com.spotify.sshagentproxy;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+import java.math.BigInteger;
+import java.security.interfaces.RSAPublicKey;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigInteger;
-import java.security.interfaces.RSAPublicKey;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 @RunWith(MockitoJUnitRunner.class)
-public class RSATest extends TestConstants {
+public class RsaTest extends TestConstants {
 
   @Test
   public void testFrom() throws Exception {
-    final RSAPublicKey key = RSA.from(PUBLIC_KEY2.getBytes());
+    final RSAPublicKey key = Rsa.from(PUBLIC_KEY2.getBytes());
     assertThat(key.getAlgorithm(), equalTo("RSA"));
     assertThat(key.getPublicExponent(), equalTo(BigInteger.valueOf(65537)));
   }

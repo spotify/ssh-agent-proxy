@@ -44,22 +44,22 @@ import java.security.PublicKey;
 public interface Identity {
 
   /**
-   * @return The key format as a string, e.g. "ssh-rsa", "ssh-dss", etc.
+   * Return the key format as a string, e.g. "ssh-rsa", "ssh-dss", etc.
    */
   String getKeyFormat();
 
   /**
-   * @return The {@link PublicKey}
+   * Return the {@link PublicKey}.
    */
   PublicKey getPublicKey();
 
   /**
-   * @return The key comment as a string.
+   * Return the key comment as a string.
    */
   String getComment();
 
   /**
-   * @return An array of bytes encoded as per RFC 4253 section 6.6 "Public Key Algorithms"
+   * Return an array of bytes encoded as per RFC 4253 section 6.6 "Public Key Algorithms"
    * for either of the supported key types: "ssh-dss" or "ssh-rsa".
    */
   byte[] getKeyBlob();

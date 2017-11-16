@@ -100,15 +100,15 @@ class SignResponseHeaders extends AgentReplyHeaders {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(final Object obj) {
+    if (this == obj) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
 
-    SignResponseHeaders that = (SignResponseHeaders) o;
+    final SignResponseHeaders that = (SignResponseHeaders) obj;
 
     if (length != that.length) {
       return false;

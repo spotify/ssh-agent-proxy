@@ -37,9 +37,6 @@
 package com.spotify.sshagentproxy;
 
 import com.google.common.base.Objects;
-
-import org.apache.commons.codec.binary.Base64;
-
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -47,21 +44,19 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Iterator;
+import org.apache.commons.codec.binary.Base64;
 
-class RSA {
+class Rsa {
 
   static final String RSA_LABEL = "ssh-rsa";
 
-  private RSA() {
+  private Rsa() {
   }
 
   /**
    * Create an {@link RSAPublicKey} from bytes.
-   * @param key Array of bytes representing RSA public key.
+   * @param key Array of bytes representing Rsa public key.
    * @return {@link RSAPublicKey}
-   * @throws InvalidKeyException
-   * @throws NoSuchAlgorithmException
-   * @throws InvalidKeySpecException
    */
   static RSAPublicKey from(final byte[] key)
       throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -86,7 +81,7 @@ class RSA {
 
     final RSAPublicKeySpec keySpec =
         TraditionalKeyParser.parsePemPublicKey(RSA_LABEL + " " + decoded + " ");
-    final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    final KeyFactory keyFactory = KeyFactory.getInstance("Rsa");
     return (RSAPublicKey) keyFactory.generatePublic(keySpec);
   }
 

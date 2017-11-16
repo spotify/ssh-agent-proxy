@@ -39,7 +39,6 @@ package com.spotify.sshagentproxy;
 import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.UnsignedBytes;
-
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -53,7 +52,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A set of utilities to parse private and public RSA PEM keys as produced by ssh-keygen.
+ * A set of utilities to parse private and public Rsa PEM keys as produced by ssh-keygen.
  */
 class TraditionalKeyParser {
 
@@ -100,7 +99,7 @@ class TraditionalKeyParser {
     byte[] derKey = encoding.decode(pemKey);
     List<byte[]> fields;
     try {
-      fields = parsePrivateKeyASN1(ByteBuffer.wrap(derKey));
+      fields = parsePrivateKeyAsn1(ByteBuffer.wrap(derKey));
     } catch (IllegalArgumentException e) {
       throw new InvalidKeyException(e);
     }
@@ -115,7 +114,7 @@ class TraditionalKeyParser {
    * @param byteBuffer the raw byte representation of a Pcks1 private key.
    * @return A list of bytes array that represent the content of the original ASN.1 collection.
    */
-  private static List<byte[]> parsePrivateKeyASN1(ByteBuffer byteBuffer) {
+  private static List<byte[]> parsePrivateKeyAsn1(ByteBuffer byteBuffer) {
     final List<byte[]> collection = new ArrayList<>();
     while (byteBuffer.hasRemaining()) {
       byte type = byteBuffer.get();
@@ -134,7 +133,7 @@ class TraditionalKeyParser {
       if (type == 0x30) {
         int position = byteBuffer.position();
         byte[] data = Arrays.copyOfRange(byteBuffer.array(), position, position + length);
-        return parsePrivateKeyASN1(ByteBuffer.wrap(data));
+        return parsePrivateKeyAsn1(ByteBuffer.wrap(data));
       }
       if (type == 0x02) {
         byte[] segment = new byte[length];

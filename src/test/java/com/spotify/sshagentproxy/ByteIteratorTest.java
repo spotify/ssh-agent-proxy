@@ -36,15 +36,14 @@
 
 package com.spotify.sshagentproxy;
 
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 public class ByteIteratorTest {
 

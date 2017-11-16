@@ -36,19 +36,17 @@
 
 package com.spotify.sshagentproxy;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.interfaces.RSAPublicKey;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class that represents the ssh-agent output.
@@ -73,7 +71,6 @@ class AgentOutput implements Closeable {
 
   /**
    * Send a SSH2_AGENTC_REQUEST_IDENTITIES message to ssh-agent.
-   * @throws IOException
    */
   void requestIdentities() throws IOException {
     writeField(out, SSH2_AGENTC_REQUEST_IDENTITIES);
@@ -84,11 +81,10 @@ class AgentOutput implements Closeable {
    * Convert int to a big-endian byte array containing the minimum number of bytes required to
    * represent it. Write those bytes to an {@link OutputStream}.
    * @param out {@link OutputStream}
-   * @param n int
-   * @throws IOException
+   * @param num int
    */
-  private static void writeField(final OutputStream out, final int n) throws IOException {
-    final byte[] bytes = BigInteger.valueOf(n).toByteArray();
+  private static void writeField(final OutputStream out, final int num) throws IOException {
+    final byte[] bytes = BigInteger.valueOf(num).toByteArray();
     writeField(out, bytes);
   }
 
@@ -96,7 +92,6 @@ class AgentOutput implements Closeable {
    * Write bytes to an {@link OutputStream} and prepend with four bytes indicating their length.
    * @param out {@link OutputStream}
    * @param bytes Array of bytes.
-   * @throws IOException
    */
   private static void writeField(final OutputStream out, final byte[] bytes)
       throws IOException {
@@ -114,20 +109,19 @@ class AgentOutput implements Closeable {
    * @param rsaPublicKey The {@link RSAPublicKey} that tells ssh-agent which private key to use to
    *                     sign the data.
    * @param data         The data in bytes to be signed.
-   * @throws IOException
    */
   void signRequest(final RSAPublicKey rsaPublicKey, final byte[] data) throws IOException {
-    // TODO (dxia) Support more than just RSA keys
-    final String keyType = RSA.RSA_LABEL;
+    // TODO (dxia) Support more than just Rsa keys
+    final String keyType = Rsa.RSA_LABEL;
     final byte[] publicExponent = rsaPublicKey.getPublicExponent().toByteArray();
     final byte[] modulus = rsaPublicKey.getModulus().toByteArray();
 
     // Four bytes indicating length of string denoting key type
     // Four bytes indicating length of public exponent
     // Four bytes indicating length of modulus
-    final int publicKeyLength = 4 + keyType.length() +
-                                4 + publicExponent.length +
-                                4 + modulus.length;
+    final int publicKeyLength = 4 + keyType.length()
+                                + 4 + publicExponent.length
+                                + 4 + modulus.length;
 
     // The message is made of:
     // Four bytes indicating length in bytes of rest of message

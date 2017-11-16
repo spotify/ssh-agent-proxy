@@ -36,11 +36,11 @@
 
 package com.spotify.sshagentproxy;
 
-import org.junit.Test;
-
 import static com.spotify.sshagentproxy.IdentitiesAnswerHeaders.SSH2_AGENT_IDENTITIES_ANSWER;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class IdentitiesAnswerHeadersTest {
 

@@ -37,7 +37,6 @@
 package com.spotify.sshagentproxy;
 
 import com.google.common.base.Objects;
-
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -62,16 +61,16 @@ class ByteIterator implements Iterator<byte[]> {
 
   @Override
   public byte[] next() {
-    int l = s2i(Arrays.copyOfRange(this.data, this.cursor, this.data.length));
+    int num = s2i(Arrays.copyOfRange(this.data, this.cursor, this.data.length));
     this.cursor += 4;
-    final byte[] bytes = Arrays.copyOfRange(this.data, this.cursor, this.cursor + l);
-    this.cursor += l;
+    final byte[] bytes = Arrays.copyOfRange(this.data, this.cursor, this.cursor + num);
+    this.cursor += num;
     return bytes;
   }
 
   /**
    * Read four bytes off the provided byte string and return the value as a big endian
-   * 32 bit unsigned integer
+   * 32 bit unsigned integer.
    * @param bytes Array of bytes.
    * @return int
    */

@@ -36,15 +36,14 @@
 
 package com.spotify.sshagentproxy;
 
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.OutputStream;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.junit.Test;
 
 public class AgentOutputTest extends TestConstants {
 
@@ -61,7 +60,7 @@ public class AgentOutputTest extends TestConstants {
   public void testSignRequest() throws Exception {
     final AgentOutput agentOut = new AgentOutput(out);
     final RSAPublicKeySpec publicKeySpec = TraditionalKeyParser.parsePemPublicKey(PUBLIC_KEY2);
-    final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    final KeyFactory keyFactory = KeyFactory.getInstance("Rsa");
     final RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(publicKeySpec);
     final byte[] bytes = new byte[]{1, 2, 3, 4};
 

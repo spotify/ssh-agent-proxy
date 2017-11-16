@@ -37,13 +37,12 @@
 package com.spotify.sshagentproxy;
 
 import com.google.common.base.Throwables;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public abstract class TestConstants {
+abstract class TestConstants {
 
-  protected static final byte[] KEY_BLOB1 = new byte[] {
+  static final byte[] KEY_BLOB1 = new byte[] {
       0, 0, 0, 7, 115, 115, 104, 45, 114, 115, 97, 0, 0, 0, 3, 1, 0, 1, 0, 0, 1, 1, 0, -76, -73,
       -41, 64, 111, 53, 14, -80, 13, 118, 77, 98, 85, -78, -76, 36, 27, -39, 127, -117, 124, 118,
       -42, -37, -29, -88, 75, -63, -43, 68, -43, -91, -88, -57, -26, 102, -128, -83, -87, 60, 75,
@@ -59,9 +58,9 @@ public abstract class TestConstants {
       76, 74, -120, 91, -16, -92, 35, 114, -11, -1, -90, -82, 3, -34, 34, -75, 53, 63, -108, -39,
       -84, -78, -126, -117, -43, -106, 29, 1, -117, 63, 29, 93, -101, 81, 94, 104, -87, -10, 115,
   };
-  protected static final String COMMENT1 = "/Users/dxia/.ssh/id_rsa";
+  static final String COMMENT1 = "/Users/dxia/.ssh/id_rsa";
 
-  protected static final byte[] KEY_BLOB2 = new byte[] {
+  static final byte[] KEY_BLOB2 = new byte[] {
       0, 0, 0, 7, 115, 115, 104, 45, 114, 115, 97, 0, 0, 0, 3, 1, 0, 1, 0, 0, 1, 1, 0, -101, -45,
       102, -66, 72, -24, 64, 113, 40, -125, -113, 31, 65, 31, 75, 113, -64, 67, 71, -70, 62, 108,
       93, -77, 60, -49, 89, -109, -24, 106, 36, -116, -25, -42, 116, 90, -45, 31, 60, 0, 20, -74,
@@ -77,20 +76,20 @@ public abstract class TestConstants {
       -93, 110, -28, -82, 93, 119, 88, -50, 77, 91, 9, 109, 48, -119, 3, -99, -113, 65, 3, -74,
       -122, 109, -88, 105, -51, 50, 90, 99, -18, 98, 14, 28, 94, 41, 119, 68, -51, -116, 17,
   };
-  protected static final String COMMENT2 = "/Users/dxia/.ssh/id_rsa.example";
-  protected static final String PUBLIC_KEY2 =
+  static final String COMMENT2 = "/Users/dxia/.ssh/id_rsa.example";
+  static final String PUBLIC_KEY2 =
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCb02a+SOhAcSiDjx9BH0txwENHuj5sXbM8z1mT6GokjOfWdFrTH"
       + "zwAFLbuCHK+QQMcmhbvH9dbuW3BXZYYxRODnF+xFAM/oZgNuJb4KCMVmjeq4HCWYvrck/S0biFCy0zb2nDU44VK"
       + "W1TBC0xredgm5/1jxomy/SXOXyUVqx8m9h3vp1ZvheNn8Il2K8L3VdbFtrntzSaQpfULyPSKyyVwZRhcZQUVx1Z"
       + "RyoS2MWNlLB1lJoJ2qfxQovepXohv52eD79OK2cnyBygxS3FnXbJr+KzsSwGbxWzHo27krl13WM5NWwltMIkDnY"
       + "9BA7aGbahpzTJaY+5iDhxeKXdEzYwR david@example.com";
 
-  protected static final byte[] DATA = "Matt Damon: space pirate!".getBytes();
+  static final byte[] DATA = "Matt Damon: space pirate!".getBytes();
 
-  protected static final byte[] SIGN_RESPONSE_HEADERS = new byte[] {
+  private static final byte[] SIGN_RESPONSE_HEADERS = new byte[] {
       0, 0, 1, 20, 14, 0, 0, 1, 15, 0, 0, 0, 7, 115, 115, 104, 45, 114, 115, 97, 0, 0, 1, 0,
   };
-  protected static final byte[] SIGN_RESPONSE_DATA = new byte[] {
+  static final byte[] SIGN_RESPONSE_DATA = new byte[] {
       105, 106, 27, 119, -107, -25,
       -88, 101, 23, -27, -28, 34, -121, 2, -90, -58, -14, -68, 74, -17, 20, 41, 15, 81, 100,
       -110, -112, 22, -114, 29, 89, -108, -27, 123, 81, -27, 3, -63, 45, -78, 47, -55, -116, 84,
@@ -108,7 +107,6 @@ public abstract class TestConstants {
       -107, -81, 127,
   };
 
-  protected static byte[] SIGN_RESPONSE_BYTES = new byte[0];
   static {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
@@ -117,7 +115,5 @@ public abstract class TestConstants {
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }
-
-    SIGN_RESPONSE_BYTES = out.toByteArray();
   }
 }
