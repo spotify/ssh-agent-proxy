@@ -48,6 +48,16 @@ Any platform that has the following
 * Java 7+
 * Maven 3 (for compiling)
 
+## Releasing
+
+To cut the Maven release:
+
+```
+mvn clean [-B -Dinvoker.skip -DskipTests -Darguments='-Dinvoker.skip -DskipTests'] \
+  -Dgpg.keyname=<key ID used for signing artifacts> \
+  release:clean release:prepare release:perform
+```
+
 
 ## Code of conduct
 
